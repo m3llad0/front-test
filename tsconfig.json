@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@app/*": ["./app/*"],
+      "@components": ["./app/_components"],
+      "@icons": ["./app/_icons"],
+      "@utils": ["./app/_utils"],
+      "@service": ["./app/_service"],
+      "@service/*": ["./app/_service/*"]
+    }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/_service/firebaseAdmin.js", "app/api/setUserClaims/route.ts", "app/api/getUserByUid/route.ts"],
+  "exclude": ["node_modules"]
+}
