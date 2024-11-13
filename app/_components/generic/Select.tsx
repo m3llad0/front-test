@@ -20,7 +20,7 @@ const Select: React.FC<SelectProps> = ({
   placeholder = 'Elige una opción',
   label,
 }) => {
-  const [selectedValue, setSelectedValue] = useState<string | number>(value ?? '');
+  const [selectedValue, setSelectedValue] = useState<string | number>(value ?? -1);
 
   useEffect(() => {
     if (value !== undefined && value !== null && value !== -1) {

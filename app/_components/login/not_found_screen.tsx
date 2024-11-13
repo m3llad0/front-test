@@ -25,7 +25,8 @@ export default function NotFound() {
 
   return (
     <div className="flex flex-col justify-center items-center h-screen bg-white text-center px-4">
-      <H1 className="mb-4 text-6xl">404 - Página no encontrada</H1>
+      <H1 className="mb-4 text-6xl mb-10">404</H1>
+      <H1>Página no encontrada</H1>
       <P className="mb-8">
         Parece que la página que estás buscando no existe o no tienes permiso para acceder.
       </P>

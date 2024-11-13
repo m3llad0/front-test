@@ -15,8 +15,10 @@ export default function ProfileChip({ name, detail, image }: ProfileProps) {
   const initials = name.charAt(0).toUpperCase(); // Get the first letter of the name
   const pathName = usePathname(); // Get the profile URL
 
+  const userType = pathName.split('/')[1];
+
   // Get the profile URL based on the current path
-  const profileUrl = pathName.endsWith('/perfil') ? pathName : `${pathName}/perfil`;
+  const profileUrl = `/${userType}/perfil`;
 
   return (
     <Link

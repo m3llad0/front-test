@@ -22,7 +22,6 @@ export default function LoginForm() {
     try {
       // # 1 - User login
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      console.log('User logged in: ', userCredential.user.accessToken);
       const user = userCredential.user;
 
       // # 2 - Force token refresh to get updated custom claims
@@ -33,6 +32,9 @@ export default function LoginForm() {
       console.log('Token Claims: ', tokenResult.claims)
 
       const userType = tokenResult.claims.userType;
+
+      localStorage.setItem('authToken', (user as any).accessToken);
+      console.log('LSAT', localStorage.getItem('authToken'));
 
       if (!userType) {
         console.error('User type is undefined')
@@ -49,7 +51,7 @@ export default function LoginForm() {
       } else {
         throw new Error('Unknown user type. Please contact support.')
       }
-    } catch (err) {
+    } catch (err: any) {
       setError(err.message || 'Correo o contraseña incorrectos.');
     } finally {
       setLoading(false);
@@ -115,9 +117,9 @@ export default function LoginForm() {
           <Button
             className='w-full mb-4 bg-blue-600 text-white py-1 px-4 rounded-md text-lg'
             onClick={handleLogin}
-            disabled={loading}
+            loading={loading}
             >
-            {loading ? '...' : 'Ingresar'}
+            Ingresar
           </Button>
         </form>
       </div>

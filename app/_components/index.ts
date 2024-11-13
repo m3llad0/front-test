@@ -3,6 +3,7 @@ export { default as BottomNav } from './generic/bottom_nav';
 export { default as Button } from './generic/button';
 export { default as ColorSelect } from './generic/color_select'
 export { default as DataBox } from './generic/data_box';
+export { default as DateSelect } from './generic/date_select'
 export { default as GrilledTable } from './generic/grilled_table'
 export { default as H1 } from './generic/h1';
 export { default as Header} from './generic/header';

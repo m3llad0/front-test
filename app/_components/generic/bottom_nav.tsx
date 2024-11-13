@@ -20,7 +20,6 @@ export default function BottomNav({ items }: BottomNavProps) {
               className="flex flex-col items-center justify-center text-qt_dark hover:text-qt_blue"
             >
               {React.cloneElement(item.icon, { className: 'h-6 w-6' })}
-              <span className="text-xs">{item.name}</span>
             </Link>
           ) : (
             <button
@@ -28,8 +27,7 @@ export default function BottomNav({ items }: BottomNavProps) {
               onClick={item.onClick}
               className="flex flex-col items-center justify-center text-qt_dark hover:text-qt_blue"
             >
-              {React.cloneElement(item.icon, { className: 'h-6 w-6' })}
-              <span className="text-xs">{item.name}</span>
+              {React.cloneElement(item.icon, { className: 'h-5 w-5' })}
             </button>
           )
         ))}

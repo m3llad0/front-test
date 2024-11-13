@@ -1,7 +1,8 @@
-export { default as ArrowRightIcon } from './arrow-right.svg'
+export { default as ArrowRightIcon } from './arrow-right.svg';
 export { default as BellEmptyIcon } from './bell-empty.svg';
 export { default as BellIcon } from './bell.svg';
 export { default as BusinessIcon } from './business.svg'
+export { default as CalendarIcon } from './calendar.svg'
 export { default as CancelIcon } from './cancel.svg'
 export { default as CheckIcon } from './check.svg'
 export { default as CircleIcon } from './circle.svg';

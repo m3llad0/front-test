@@ -19,7 +19,9 @@
     "firebase-admin": "^12.6.0",
     "next": "^14.2.5",
     "react": "^18",
+    "react-calendar": "^5.1.0",
     "react-color": "^2.19.3",
+    "react-datepicker": "^7.5.0",
     "react-dom": "^18"
   },
   "devDependencies": {
@@ -29,6 +31,7 @@
     "@types/jest": "^29.5.12",
     "@types/node": "^20",
     "@types/react": "^18",
+    "@types/react-color": "^3.0.12",
     "@types/react-dom": "^18",
     "eslint": "^8.57.1",
     "eslint-config-next": "^14.2.5",

@@ -3,15 +3,17 @@
 import React, { useState, useEffect } from 'react';
 import { Sidebar, Header, BottomNav, LoadingScreen, SessionEndedScreen, NotFoundScreen } from '@components'; 
 import { BellEmptyIcon, BusinessIcon, CheckIcon, FinanceIcon, HomeIcon, LogoutIcon, MenuIcon, MoonIcon, NoIcon, SearchIcon, SunIcon, TransactionIcon } from "@icons";
-import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, signOut, User } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import app from '@service/firebaseConfig';
+import { fetchSupervisorData } from '@service/supervisor';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [loading, setLoading] = useState(true); // Initially true to display loading
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const [isValidUserType, setIsValidUserType] = useState(true);
+  const [supervisorName, setSupervisorName] = useState('');
 
   const router = useRouter();
   const auth = getAuth(app);
@@ -32,14 +34,27 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
-        const token = await currentUser.getIdTokenResult();
-        const userType = token.claims.userType;
+        try {
+          console.log('% ', currentUser);
+          const token= await currentUser.getIdToken(true);
+          const tokenResult = await currentUser.getIdTokenResult();
+          const userType = tokenResult.claims.userType;
+          
+          setUser(currentUser);
 
-        setUser(currentUser);
-        setIsValidUserType(userType === 'supervisor');
+          if (userType !== 'supervisor') {
+            setIsValidUserType(false);
+          } else {
+            setIsValidUserType(true);
+            const supervisorData = await fetchSupervisorData(currentUser.uid);
+            setSupervisorName(supervisorData.nombre);
+          }
+        } catch (error) {
+          console.error(`Error fetching supervisor data for UID ${currentUser.uid}: `, error);
+          setUser(null);
+        }
       } else {
         setUser(null);
-        setIsValidUserType(false); // No user implies invalid user type
       }
       setLoading(false); // Only set loading to false once the user state is checked
     });
@@ -51,13 +66,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     return <LoadingScreen />;
   }
 
-  // if (!user) {
-  //   return <SessionEndedScreen />;
-  // }
+  if (!user) {
+    return <SessionEndedScreen />; // Route protection
+  }
 
-  // if (!isValidUserType) {
-  //   return <NotFoundScreen />;
-  // }
+  if (!isValidUserType) {
+    return <NotFoundScreen />; // Route protection
+  }
 
   // Navigation items for BottomNav
   const NavigationItems = [
@@ -97,7 +112,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         {/* Main content container */}
         <div className="flex flex-1 flex-col overflow-auto hide-scrollbar">
           <Header 
-            name="Martin" 
+            name={supervisorName || '---'}
             role="Supervisor"
             SearchIcon={<SearchIcon className="text-qt_dark mr-5 h-6 w-6" />}
             BellIcon={<BellEmptyIcon className="w-7 h-7 text-qt_dark" />}
@@ -105,7 +120,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             SunIcon={<SunIcon className="text-yellow-400 w-3 h-3" />}
           />
           {/* Main content */}
-          <div className="flex-1 max-w-full overflow-auto m-0 p-0 hide-scrollbar">
+          <div className="flex-1 max-w-full overflow-auto m-0 p-0 hide-scrollbar pb-16">
             {children}
           </div>
         </div>

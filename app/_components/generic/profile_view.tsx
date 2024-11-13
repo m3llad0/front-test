@@ -2,12 +2,13 @@
 
 import React from 'react';
 import Image from 'next/image';
+import Button from './button';
 
 interface ProfileViewProps {
   name: string;
   email: string;
   permisos: string;
-  direccion: string;
+  direccion?: string;
   image?: string; // Optional profile image URL
 }
 
@@ -44,9 +45,20 @@ export default function ProfileView({ name, email, permisos, direccion, image }:
       <div className="w-full text-left">
         <label className="text-qt_dark font-semibold">Permisos</label>
         <p className="text-qt_primary mb-4">{permisos}</p>
-
-        <label className="text-qt_dark font-semibold">Dirección</label>
-        <p className="text-qt_primary">{direccion}</p>
+        {direccion && (
+          <>
+            <label className="text-qt_dark font-semibold">Dirección</label>
+            <p className="text-qt_primary mb-4">{direccion}</p>
+          </>
+        )}
+        <div className='flex justify-between'>
+          <Button>
+            Cambiar Contraseña
+          </Button>
+          <Button>
+            Modificar datos
+          </Button>
+        </div>
       </div>
     </div>
   );

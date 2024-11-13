@@ -1,19 +1,18 @@
-import axios from 'axios';
+import api from '@service/axiosInstance';
 import { API_URL } from '@service';
 
 export type Billete = { [key: string]: number };
 export type Caja = {
-  id: number;
-  sucursal_id?: number;
+  id?: number;
+  sucursal_id: string;
   divisa_id: number;
   fecha_inicio?: string;
-  billetes: { billetes: Billete };
-  estatus?: boolean;
+  billetes: Billete;
 }
 
 export async function fetchCajasData() {
   try {
-    const response = await axios.get(`${API_URL}/caja`)
+    const response = await api.get(`${API_URL}/caja`)
     if (response.status === 200) {
       return response.data as Caja[];
     } else {
@@ -25,24 +24,47 @@ export async function fetchCajasData() {
   }
 }
 
-export async function addCaja(caja: Partial<Caja>) {
+export async function addCaja(caja: Caja): Promise<Caja> {
   try {
-    // Extract only the needed fields. SUCURSAL ID MIGHT NEED TO BE PASSABLE @m3llad0
-    const { divisa_id, billetes } = caja;
-    if (divisa_id && billetes) {
-      const filteredCaja = { divisa_id, billetes };
-      const response = await axios.post(`${API_URL}/caja`, filteredCaja);
-
-      if (response.status !== 201) {
-        throw new Error(`Failed to add caja: ${response.statusText}`);
-      }
-
-      return response.data;
-    } else {
-      throw new Error('Invalid caja data: divisa_id and billetes are required.');
-    }
+    console.log('Caja data: ', {
+      sucursal_id: caja.sucursal_id,
+      divisa_id: caja.divisa_id,
+      billetes: caja.billetes,
+    });
+    
+    const response = await api.post(`${API_URL}/caja`, {
+      sucursal_id: caja.sucursal_id,
+      divisa_id: caja.divisa_id,
+      billetes: caja.billetes,
+    });
+    return response.data;  
   } catch (error) {
     console.error('Error adding caja: ', error);
     throw error;
   }
 }
+
+export async function editCaja(id: number, updatedCaja: Caja): Promise<Caja> {
+  try {
+    const response = await api.put(`${API_URL}/caja/${id}`, {
+      sucursal_id: updatedCaja.sucursal_id,
+      divisa_id: updatedCaja.divisa_id,
+      billetes: updatedCaja.billetes,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(`Error updating caja with ID ${id}:`, error);
+    throw error;
+  }
+}
+
+export async function deleteCaja(id: number): Promise<void> {
+  try {
+    await api.delete(`${API_URL}/caja/${id}`);
+    console.log(`Deleted caja with ID: ${id}`);
+  } catch (error) {
+    console.error(`Error deleting caja with ID ${id}:`, error);
+    throw error;
+  }
+}
+

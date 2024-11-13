@@ -1,4 +1,4 @@
-import axios from 'axios';
+import api from '@service/axiosInstance';
 import { API_URL } from '@service';
 
 export type Operacion = {
@@ -20,7 +20,7 @@ export type Operacion = {
 
 export async function fetchOperacionesData(): Promise<Operacion[]> {
   try {
-    const response = await axios.get(`${API_URL}/operacion`);
+    const response = await api.get(`${API_URL}/operacion`);
     return response.data.map((operacion: any) => ({
       id: operacion.id,
       fecha: operacion.fecha,

@@ -3,27 +3,25 @@
 import React, { useEffect, useState } from 'react';
 import { LoadingScreen, SessionEndedScreen, NotFoundScreen, Sidebar, Header, BottomNav } from '@components';
 import { BellEmptyIcon, FinanceIcon, HomeIcon, LogoutIcon, MenuIcon, MoonIcon, SearchIcon, SunIcon, TransactionIcon } from "@icons";
+import { getAuth, onAuthStateChanged, signOut, User } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
-import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { fetchSucursalData } from '@service/sucursal';
 import app from '@service/firebaseConfig';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState(null);  // Track the actual user state
+  const [user, setUser] = useState<User | null>(null);  // Track the actual user state
   const [isValidUserType, setIsValidUserType] = useState(true); // Track if the user type is valid
   const [sucursalName, setSucursalName] = useState('');
 
   const router = useRouter();
   const auth = getAuth(app);
 
-  // Toggle Sidebar
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  // Handle user logout
   const handleLogout = async () => {
     try {
       await signOut(auth);
@@ -33,14 +31,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // Manage user authentication state and check user type
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
-        setUser(currentUser);  // Store the user object
         const token = await currentUser.getIdTokenResult();
         const userType = token.claims.userType;
 
+        setUser(currentUser);
         if (userType !== 'sucursal') {
           setIsValidUserType(false); // If user type is incorrect, mark as invalid
         } else {
